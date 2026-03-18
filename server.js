@@ -2,65 +2,35 @@ const express = require('express');
 const app = express();
 const path = require('path');
 
-app.use(express.json());
+// Serve arquivos estáticos da pasta public
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Permite HTML, CSS e JS
-app.use(express.static(path.join(__dirname)));
-
-// CLASSE BASE
+// CLASSES DE HARDWARE
 class ComponenteHardware {
-    gerarValor() {
-        throw new Error("Método deve ser implementado");
-    }
-
-    formatar(valor) {
-        return valor;
-    }
+    gerarValor() { throw new Error("Método deve ser implementado"); }
+    formatar(valor) { return valor; }
 }
 
-// CPU
 class CPU extends ComponenteHardware {
-    gerarValor() {
-        return (Math.random() * 100).toFixed(2);
-    }
-
-    formatar(valor) {
-        return `${valor} %`;
-    }
+    gerarValor() { return (Math.random() * 100).toFixed(2); }
+    formatar(valor) { return `${valor} %`; }
 }
 
-// RAM
 class RAM extends ComponenteHardware {
-    gerarValor() {
-        return (Math.random() * 32).toFixed(2);
-    }
-
-    formatar(valor) {
-        return `${valor} GB`;
-    }
+    gerarValor() { return (Math.random() * 32).toFixed(2); }
+    formatar(valor) { return `${valor} GB`; }
 }
 
-// Temperatura
 class Temperatura extends ComponenteHardware {
-    gerarValor() {
-        return (Math.random() * (90 - 30) + 30).toFixed(2);
-    }
-
-    formatar(valor) {
-        return `${valor} °C`;
-    }
+    gerarValor() { return (Math.random() * (90 - 30) + 30).toFixed(2); }
+    formatar(valor) { return `${valor} °C`; }
 }
 
-// LÓGICA DE NEGÓCIO
+// MOTOR DE HARDWARE
 class HardwareEngine {
     constructor() {
-        this.componentes = [
-            new CPU(),
-            new RAM(),
-            new Temperatura()
-        ];
+        this.componentes = [ new CPU(), new RAM(), new Temperatura() ];
     }
-
     obterDados() {
         return {
             cpu: this.componentes[0].formatar(this.componentes[0].gerarValor()),
@@ -70,20 +40,17 @@ class HardwareEngine {
     }
 }
 
-// API correta
+// Rota /monitoramento retorna os dados simulados
 app.get('/monitoramento', (req, res) => {
     const engine = new HardwareEngine();
     res.json(engine.obterDados());
 });
 
-// Página principal
+// Rota principal serve o index.html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// SERVIDOR
+// Servidor
 const PORT = 3000;
-
-app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`Servidor rodando em http://localhost:${PORT}`));
