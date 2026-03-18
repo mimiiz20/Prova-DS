@@ -4,7 +4,7 @@ const path = require('path');
 
 app.use(express.json());
 
-// 🔥 permite HTML, CSS e JS
+// Permite HTML, CSS e JS
 app.use(express.static(path.join(__dirname)));
 
 // CLASSE BASE
@@ -70,13 +70,13 @@ class HardwareEngine {
     }
 }
 
-// 🔥 API correta
+// API correta
 app.get('/monitoramento', (req, res) => {
     const engine = new HardwareEngine();
     res.json(engine.obterDados());
 });
 
-// 🔥 Página principal
+// Página principal
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
